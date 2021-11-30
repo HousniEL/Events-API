@@ -22,7 +22,8 @@
     "mongodb": "^4.2.0",
     "mongoose": "^6.0.13",
     "mongoose-unique-validator": "^3.0.0",
-    "slugify": "^1.6.2"
+    "slugify": "^1.6.2",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

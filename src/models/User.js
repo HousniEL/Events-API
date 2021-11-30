@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
+
 import uniqueValidator from 'mongoose-unique-validator';
+
+import isEmail from 'validator/lib/isEmail';
 
 class User{
     initSchema(){
@@ -13,8 +17,16 @@ class User{
                 type: String,
                 required: true,
             },
-            age: {
-                type: Number,
+            email: {
+                type: String,
+                trim: true,
+                lowercase: true,
+                unique: true,
+                required: true,
+                validate: [ isEmail, 'Please fill a valid email address'],
+            },
+            password: {
+                type: String,
                 required: true,
             },
         });
