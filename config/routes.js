@@ -5,10 +5,7 @@ export default (server) => {
 
   // Api route
   server.use("/api/user", UserRoute);
-
-  server.get('/', (req, res) => {
-    return res.json({ message: "Hello!" });
-  });
+  
 
   // If no route matches. Send a 404 page
   server.get('*', (req, res) => {

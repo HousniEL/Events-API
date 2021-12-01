@@ -4,7 +4,10 @@ const { Schema } = mongoose;
 
 import uniqueValidator from 'mongoose-unique-validator';
 
-import isEmail from 'validator/lib/isEmail';
+var validateEmail = function(email) {
+    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return re.test(email);
+};
 
 class User{
     initSchema(){
@@ -23,7 +26,7 @@ class User{
                 lowercase: true,
                 unique: true,
                 required: true,
-                validate: [ isEmail, 'Please fill a valid email address'],
+                validate: [ validateEmail, 'Please fill a valid email address'],
             },
             password: {
                 type: String,

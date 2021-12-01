@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import server from "./config/server.js";
+
 import "./config/database.js";
 
 const PORT = process.env.PORT || 5000;
