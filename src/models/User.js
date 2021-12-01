@@ -32,6 +32,12 @@ class User{
                 type: String,
                 required: true,
             },
+        }, {
+            writeConcern: {
+                w: "majority",
+                j: true,
+                wtimeout: 1000,
+            }
         });
         schema.plugin(uniqueValidator);
         mongoose.model('users', schema);
