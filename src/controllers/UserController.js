@@ -10,6 +10,12 @@ class UserController extends Controller{
     constructor(service){
         super(service);
     }
+
+    async signin(req, res) {
+        const response = await this.service.signin(req.body);
+        return res.status(response.statusCode).send(response);
+    }
+
 };
 
 export default new UserController(userService);

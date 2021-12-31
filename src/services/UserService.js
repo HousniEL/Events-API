@@ -24,6 +24,33 @@ class UserService extends Service {
             };
         }
     }
+
+    async signin(data){
+        var message;
+        this.model.findOne({
+            username: data.email
+        }).exec((err, user) => {
+            if (err) {
+                message = {
+                    error: true,
+                    statusCode: 500,
+                    message: err.err,
+                    errors: err.errors
+                }
+                return;
+            }
+            if (user) {
+                message = {
+                    error: false,
+                    statusCode: 202,
+                    user
+                };
+                return;
+            }    
+        });
+        return message;
+    }
+
 }
 
 export default UserService;

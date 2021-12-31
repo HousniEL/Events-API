@@ -1,10 +1,12 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import setRoutes from './routes.js';
 
 const server = express();
 
-server.use(bodyParser.json());
+// parse requests of content-type - application/json
+server.use(express.json());
+// parse requests of content-type - application/x-www-form-urlencoded
+server.use(express.urlencoded({ extended: true }));
 
 setRoutes(server);
 
