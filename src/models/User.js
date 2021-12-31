@@ -28,6 +28,10 @@ class User{
                 required: true,
                 validate: [ validateEmail, 'Please fill a valid email address'],
             },
+            numtel: {
+                type: String,
+                unique: true,
+            },
             password: {
                 type: String,
                 required: true,
