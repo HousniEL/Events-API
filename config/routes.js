@@ -1,5 +1,4 @@
 import UserRoute from '../src/routes/UserRoute.js';
-import UserTokenRoute from '../src/routes/UserTokenRoute.js';
 import EventRoute from '../src/routes/EventRoute.js';
 import EventTagsRoute from '../src/routes/EventTagsRoute.js';
 import BilletRoute from '../src/routes/BilletRoute.js';
@@ -11,7 +10,6 @@ export default (server) => {
 
   // Api route
   server.use("/api/user", UserRoute);
-  server.use("/api/usertoken", UserTokenRoute);
   server.use("/api/event", EventRoute);
   server.use("/api/eventtags", EventTagsRoute);
   server.use("/api/billet", BilletRoute);
