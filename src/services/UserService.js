@@ -8,6 +8,7 @@ class UserService extends Service {
     constructor(model){
         super(model);
         this.signin = this.signin.bind(this);
+        this.openid = this.openid.bind(this);
         this.userTokenService = new UserTokenService( new UserToken().getInstance() );
     }
     
@@ -87,6 +88,14 @@ class UserService extends Service {
         };
     }
 
+    async openid(data){
+        var response = await this.model.findOne({ email: data.email });
+        if( response ){
+            return this.signin(data);
+        } else {
+            return this.signup(data);
+        }
+    }
 }
 
 export default UserService;

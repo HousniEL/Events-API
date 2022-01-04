@@ -12,6 +12,7 @@ class UserController extends Controller {
         super(service);
         this.signin = this.signin.bind(this);
         this.signout = this.signout.bind(this);
+        this.openid = this.openid.bind(this);
     }
     
     async signin(req, res) {
@@ -23,6 +24,12 @@ class UserController extends Controller {
         const response = await this.service.signout(req.body);
         return res.status(response.statusCode).send(response);
     }
+
+    async openid(req, res){
+        const response = await this.service.openid(req.body);
+        return res.status(response.statusCode).send(response);
+    }
+
 
 };
 

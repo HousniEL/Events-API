@@ -4,7 +4,7 @@ import { JwtMiddleware } from '../middlewares/JWTMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', UserController.getAll);
+router.post('/openid', UserController.openid);
 router.post('/signup', UserController.insert);
 router.post('/signin', UserController.signin);
 router.post('/signout', JwtMiddleware, UserController.signout);
