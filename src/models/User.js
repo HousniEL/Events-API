@@ -9,6 +9,10 @@ var validateEmail = function(email) {
     return re.test(email);
 };
 
+var validatePassword = function(value){
+    return value != null && value != undefined;
+}
+
 class User{
     initSchema(){
         const schema = new Schema({
@@ -33,7 +37,7 @@ class User{
             },
             password: {
                 type: String,
-                required: true,
+                validate: [ validatePassword, 'required'],
             },
             account: {
                 type: String,

@@ -23,7 +23,9 @@ class UserService extends Service {
     }
 
     async insert(data, token = null){
-        data.password = crypto.pbkdf2Sync(data.password, process.env.SALT, 1000, 64, `sha512`).toString(`hex`); 
+        if(!token){
+            data.password = crypto.pbkdf2Sync(data.password, process.env.SALT, 1000, 64, `sha512`).toString(`hex`); 
+        }
         try {
             let item = await this.model.create(data);
             if (item){
@@ -50,9 +52,22 @@ class UserService extends Service {
     async signin(data, token = null){
         var response = await this.model.findOne({ email : data.email }).exec();
         if (response) {
-            var token = await this.insertToken(response._id, token);
-            var hash = crypto.pbkdf2Sync(data.password, process.env.SALT, 1000, 64, `sha512`).toString(`hex`);
-            if( hash === response.password ){
+            if(!response.account){
+                var token = await this.insertToken(response._id, token);
+                var hash = crypto.pbkdf2Sync(data.password, process.env.SALT, 1000, 64, `sha512`).toString(`hex`);
+                if( hash === response.password ){
+                    return {
+                        error: false,
+                        statusCode: 202,
+                        response : {
+                            user: response,
+                            token: token,
+                        },
+                    }
+                }
+            }
+            if(response.account && token){
+                var token = await this.insertToken(response._id, token);
                 return {
                     error: false,
                     statusCode: 202,
@@ -92,10 +107,11 @@ class UserService extends Service {
 
     async openid(data){
         var response = await this.model.findOne({ email: data.email });
+        data.password = "";
         if( response ){
             return this.signin(data, data.token);
         } else {
-            return this.signup(data, data.token);
+            return this.insert(data, data.token);
         }
     }
 }
