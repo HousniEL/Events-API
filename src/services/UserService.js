@@ -9,19 +9,25 @@ class UserService extends Service {
         super(model);
         this.signin = this.signin.bind(this);
         this.openid = this.openid.bind(this);
+        this.insertToken = this.insertToken.bind(this);
         this.userTokenService = new UserTokenService( new UserToken().getInstance() );
     }
     
-    async insert(data){
+    async insertToken(id, token = null){
+        if(!token) token = getAccessToken(JSON.stringify({ id: id }));
+        await this.userTokenService.insert({
+            userid: id,
+            token: token,
+        });
+        return token;
+    }
+
+    async insert(data, token = null){
         data.password = crypto.pbkdf2Sync(data.password, process.env.SALT, 1000, 64, `sha512`).toString(`hex`); 
         try {
             let item = await this.model.create(data);
             if (item){
-                var token = getAccessToken(JSON.stringify({ id : response._id }));
-                this.userTokenService.insert({
-                    userid: response._id,
-                    token: token,
-                });
+                var token = await this.insertToken(item._id, token);
                 return {
                     error: false,
                     statusCode: 202,
@@ -41,14 +47,10 @@ class UserService extends Service {
         }
     }
 
-    async signin(data){
+    async signin(data, token = null){
         var response = await this.model.findOne({ email : data.email }).exec();
         if (response) {
-            var token = getAccessToken(JSON.stringify({ id : response._id }));
-            this.userTokenService.insert({
-                userid: response._id,
-                token: token,
-            });
+            var token = await this.insertToken(response._id, token);
             var hash = crypto.pbkdf2Sync(data.password, process.env.SALT, 1000, 64, `sha512`).toString(`hex`);
             if( hash === response.password ){
                 return {
@@ -91,9 +93,9 @@ class UserService extends Service {
     async openid(data){
         var response = await this.model.findOne({ email: data.email });
         if( response ){
-            return this.signin(data);
+            return this.signin(data, data.token);
         } else {
-            return this.signup(data);
+            return this.signup(data, data.token);
         }
     }
 }

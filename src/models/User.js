@@ -30,11 +30,13 @@ class User{
             },
             numtel: {
                 type: String,
-                unique: true,
             },
             password: {
                 type: String,
                 required: true,
+            },
+            account: {
+                type: String,
             },
         }, {
             writeConcern: {
