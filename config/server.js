@@ -1,5 +1,6 @@
-import express from 'express';
-import setRoutes from './routes.js';
+import express from "express";
+
+import setRoutes from "./routes.js";
 
 const server = express();
 
