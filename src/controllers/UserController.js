@@ -13,6 +13,8 @@ class UserController extends Controller {
         this.signin = this.signin.bind(this);
         this.signout = this.signout.bind(this);
         this.openid = this.openid.bind(this);
+        this.get=this.get.bind(this)
+        this.addFavoris=this.addFavoris.bind(this)
     }
     
     async signin(req, res) {
@@ -29,7 +31,15 @@ class UserController extends Controller {
         const response = await this.service.openid(req.body);
         return res.status(response.statusCode).send(response);
     }
-
+    async get(req, res){
+        const response = await this.service.get(req.body);
+        return res.status(response.statusCode).send(response);
+    }
+    async addFavoris(req, res){
+        const response = await this.service.addFavoris(req.body);
+        return res.status(response.statusCode).send(response);
+    }
+    
 
 };
 

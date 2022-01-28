@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import express from "express";
 import fs from "fs";
+=======
+import express, { request } from "express";
+import multer from "multer";
+>>>>>>> 3c0656c6e345d83d9a8023770af95b675e3bf3e7
 
 import EventController from "../controllers/EventController.js";
 
@@ -35,5 +40,9 @@ route.post("/upload", (req, res) => {
 
 route.put("/:id", EventController.update);
 route.delete("/:id", EventController.delete);
-
+route.get("/test",(req,res)=>{
+  res.status(200).json(
+    {message:"bonjour"}  )
+})
+route.post("/infos", EventController.get);
 export default route;

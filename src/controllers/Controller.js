@@ -17,6 +17,7 @@ class Controller {
     return res.status(response.statusCode).send(response);
   }
 
+<<<<<<< HEAD
   async update(req, res) {
     const { id } = req.body;
     let response = await this.service.update(id, req.body);
@@ -28,6 +29,14 @@ class Controller {
     let response = await this.service.delete(id);
     return res.status(response.statusCode).send(response);
   }
+=======
+    async delete(req, res) {
+        const { id } = req.params;
+        let response = await this.service.delete(id);
+        return res.status(response.statusCode).send(response);
+    }
+    
+>>>>>>> 3c0656c6e345d83d9a8023770af95b675e3bf3e7
 }
 
 export default Controller;

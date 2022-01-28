@@ -42,6 +42,9 @@ class User{
             account: {
                 type: String,
             },
+            favoris: {
+                type: Array,
+            },
         }, {
             writeConcern: {
                 w: "majority",
