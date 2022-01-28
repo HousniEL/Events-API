@@ -95,12 +95,12 @@ class UserService extends Service {
       var token = await this.userTokenService.getAll({ id: response._id });
       if (!token.error) {
         await this.userTokenService.delete({ _id: token.id });
-        return {
-          error: false,
-          statusCode: 202,
-        };
       }
-      return token;
+      return {
+        error: false,
+        statusCode: 202,
+        message: "Done",
+      };
     }
     return {
       error: true,
