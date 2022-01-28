@@ -9,7 +9,13 @@ const eventService = new EventService(
 class EventController extends Controller {
     constructor(service){
         super(service);
+        this.get=this.get.bind(this);
+    }
+    async get(req, res) {
+        const response = await this.service.get(req.body);
+        return res.status(response.statusCode).send(response);
     }
 }
+
 
 export default new EventController(eventService);

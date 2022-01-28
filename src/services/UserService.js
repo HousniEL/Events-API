@@ -11,6 +11,8 @@ class UserService extends Service {
     this.openid = this.openid.bind(this);
     this.insertToken = this.insertToken.bind(this);
     this.userTokenService = new UserTokenService(new UserToken().getInstance());
+    this.addFavoris=this.addFavoris.bind(this);
+    this.get=this.get.bind(this);
   }
 
   async insertToken(id, token = null) {
@@ -118,6 +120,47 @@ class UserService extends Service {
       return this.insert(data, data.token);
     }
   }
+
+
+async get(data) {
+  var response = await this.model.findOne({_id: data.id });
+  if (response) {
+    return {
+             error:false,
+             statusCode:200,
+             user:response
+    };
+  } else {
+    return {
+              error:true,
+              statusCode:500,
+              message:"not found"
+    };
+  }
 }
+
+async addFavoris(data) {
+  var response = await this.model.findOneAndUpdate({_id:data.userId},( 
+    { $set: { favoris: data.eventId}
+  },function (err, user) {
+    if (err) return console.log(err)
+    console.log(user)
+   
+}
+  ))
+    console.log(data)
+  if (response) {
+    return {
+             error:false,
+             statusCode:200,
+    };
+  } else {
+    return {
+              error:true,
+              statusCode:500,
+              message:"not found"
+    };
+  }
+}}
 
 export default UserService;

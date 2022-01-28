@@ -1,4 +1,4 @@
-import express from "express";
+import express, { request } from "express";
 import multer from "multer";
 
 import EventController from "../controllers/EventController.js";
@@ -27,5 +27,9 @@ route.post("/upload", upload.array("photo", 3), (req, res) => {
 });
 route.put("/:id", EventController.update);
 route.delete("/:id", EventController.delete);
-
+route.get("/test",(req,res)=>{
+  res.status(200).json(
+    {message:"bonjour"}  )
+})
+route.post("/infos", EventController.get);
 export default route;

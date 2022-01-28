@@ -29,7 +29,7 @@ class Controller {
         let response = await this.service.delete(id);
         return res.status(response.statusCode).send(response);
     }
-
+    
 }
 
 export default Controller;

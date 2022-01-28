@@ -10,5 +10,7 @@ router.post("/signin", UserController.signin);
 router.post("/signout", UserController.signout);
 router.put("/:id", UserController.update);
 router.delete("/:id", UserController.delete);
+router.post("/infos", UserController.get);
+router.post("/addFavoris",UserController.addFavoris)
 
 export default router;
