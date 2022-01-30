@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import express from "express";
-import fs from "fs";
-=======
-import express, { request } from "express";
-import multer from "multer";
->>>>>>> 3c0656c6e345d83d9a8023770af95b675e3bf3e7
+import fs, { read } from "fs";
 
 import EventController from "../controllers/EventController.js";
 
@@ -37,12 +32,42 @@ route.post("/upload", (req, res) => {
     message: "Done",
   });
 });
-
 route.put("/:id", EventController.update);
 route.delete("/:id", EventController.delete);
-route.get("/test",(req,res)=>{
-  res.status(200).json(
-    {message:"bonjour"}  )
-})
 route.post("/infos", EventController.get);
+route.post("/user", EventController.getUserEvents);
+route.post("/addGuest", EventController.newGuest);
+
+route.post("/images", (req, res) => {
+  readFile(
+    req.body.rep,
+    req.body.imgs,
+    0,
+    [],
+    (err) => {
+      res.status(500).json(err);
+    },
+    (result) => {
+      res.status(200).json(result);
+    }
+  );
+});
+
+function readFile(rep, array, index, images, error, success) {
+  if (index < array.length) {
+    fs.readFile(`uploads/${rep}/${array[index]}.jpg`, "base64", (err, data) => {
+      if (err) {
+        return error({
+          error: true,
+          message: err.message,
+        });
+      }
+      images.push(data);
+      readFile(rep, array, index + 1, images, error, success);
+    });
+  } else {
+    return success({ images });
+  }
+}
+
 export default route;

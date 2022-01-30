@@ -11,8 +11,12 @@ class UserService extends Service {
     this.openid = this.openid.bind(this);
     this.insertToken = this.insertToken.bind(this);
     this.userTokenService = new UserTokenService(new UserToken().getInstance());
-    this.addFavoris=this.addFavoris.bind(this);
-    this.get=this.get.bind(this);
+    this.get = this.get.bind(this);
+    this.addFavoris = this.addFavoris.bind(this);
+    this.deleteFavoris = this.deleteFavoris.bind(this);
+    this.addEvent = this.addEvent.bind(this);
+    this.deleteEvent = this.deleteEvent.bind(this);
+    this.getSomeUserInfo = this.getSomeUserInfo.bind(this);
   }
 
   async insertToken(id, token = null) {
@@ -121,46 +125,152 @@ class UserService extends Service {
     }
   }
 
+  async get(data) {
+    var response = await this.model.findOne({ _id: data.id }, { password: 0 });
+    if (response) {
+      return {
+        error: false,
+        statusCode: 200,
+        user: response,
+      };
+    } else {
+      return {
+        error: true,
+        statusCode: 500,
+        message: "not found",
+      };
+    }
+  }
 
-async get(data) {
-  var response = await this.model.findOne({_id: data.id });
-  if (response) {
-    return {
-             error:false,
-             statusCode:200,
-             user:response
-    };
-  } else {
-    return {
-              error:true,
-              statusCode:500,
-              message:"not found"
-    };
+  async addFavoris(data) {
+    try {
+      var response = await this.model.updateOne(
+        { _id: data.userId },
+        { $addToSet: { favoris: data.eventId } }
+      );
+      if (response) {
+        return {
+          error: false,
+          statusCode: 200,
+        };
+      } else {
+        return {
+          error: true,
+          statusCode: 500,
+          message: "not found",
+        };
+      }
+    } catch (e) {
+      return {
+        error: true,
+        statusCode: 500,
+        message: e.message,
+      };
+    }
+  }
+
+  async deleteFavoris(data) {
+    try {
+      var response = await this.model.updateOne(
+        { _id: data.userId },
+        { $pull: { favoris: data.eventId } }
+      );
+      if (response) {
+        return {
+          error: false,
+          statusCode: 200,
+        };
+      } else {
+        return {
+          error: true,
+          statusCode: 500,
+          message: "not found",
+        };
+      }
+    } catch (e) {
+      return {
+        error: true,
+        statusCode: 500,
+        message: e.message,
+      };
+    }
+  }
+
+  async addEvent(data) {
+    try {
+      var response = await this.model.updateOne(
+        { _id: data.userId },
+        { $addToSet: { events: data.eventId } }
+      );
+      if (response) {
+        return {
+          error: false,
+          statusCode: 200,
+        };
+      } else {
+        return {
+          error: true,
+          statusCode: 500,
+          message: "not found",
+        };
+      }
+    } catch (e) {
+      return {
+        error: true,
+        statusCode: 500,
+        message: e.message,
+      };
+    }
+  }
+
+  async deleteEvent(data) {
+    try {
+      var response = await this.model.updateOne(
+        { _id: data.userId },
+        { $pull: { event: data.eventId } }
+      );
+      if (response) {
+        return {
+          error: false,
+          statusCode: 200,
+        };
+      } else {
+        return {
+          error: true,
+          statusCode: 500,
+          message: "not found",
+        };
+      }
+    } catch (e) {
+      return {
+        error: true,
+        statusCode: 500,
+        message: e.message,
+      };
+    }
+  }
+
+  async getSomeUserInfo(data) {
+    var response = await this.model.findOne({ _id: data.id }, { password: 0 });
+    if (response) {
+      var resp = { ...response._doc };
+      resp["nbrFavoris"] = response.favoris ? response.favoris.length : 0;
+      resp["nbrEvents"] = response.events ? response.events.length : 0;
+      delete resp["favoris"];
+      delete resp["events"];
+      return {
+        error: false,
+        statusCode: 200,
+        user: resp,
+      };
+    } else {
+      return {
+        error: true,
+        statusCode: 500,
+        message: "not found",
+      };
+    }
   }
 }
-
-async addFavoris(data) {
-  var response = await this.model.findOneAndUpdate({_id:data.userId},( 
-    { $set: { favoris: data.eventId}
-  },function (err, user) {
-    if (err) return console.log(err)
-    console.log(user)
-   
-}
-  ))
-    console.log(data)
-  if (response) {
-    return {
-             error:false,
-             statusCode:200,
-    };
-  } else {
-    return {
-              error:true,
-              statusCode:500,
-              message:"not found"
-    };
-  }
-}}
 
 export default UserService;
