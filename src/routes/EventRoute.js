@@ -34,16 +34,17 @@ route.post("/upload", (req, res) => {
 });
 route.put("/:id", EventController.update);
 route.delete("/:id", EventController.delete);
-route.post("/infos", EventController.get);
+route.post("/infos", EventController.getEvent);
 route.post("/user", EventController.getUserEvents);
 route.post("/addGuest", EventController.newGuest);
+route.post("/removeGuest", EventController.removeGuest);
 
 route.post("/images", (req, res) => {
   readFile(
     req.body.rep,
     req.body.imgs,
     0,
-    [],
+    [], // ici se stocke le resultat qui est des images en binaires
     (err) => {
       res.status(500).json(err);
     },
@@ -53,9 +54,10 @@ route.post("/images", (req, res) => {
   );
 });
 
-function readFile(rep, array, index, images, error, success) {
+function readFile(rep, array, index, images, error, success) { //rep=dossier name, 
   if (index < array.length) {
-    fs.readFile(`uploads/${rep}/${array[index]}.jpg`, "base64", (err, data) => {
+    fs.readFile(`uploads/${rep}/${array[index]}.jpg`, "base64", (err, data) => {//Array tableau d'images, 
+      //cette fct permet de passer les images au front en le convertissanr en binaire ,le front lit le fichier binaire automatiquement
       if (err) {
         return error({
           error: true,
@@ -63,7 +65,7 @@ function readFile(rep, array, index, images, error, success) {
         });
       }
       images.push(data);
-      readFile(rep, array, index + 1, images, error, success);
+      readFile(rep, array, index + 1 , images, error, success);//index+1 pour passer al'image prochaine
     });
   } else {
     return success({ images });

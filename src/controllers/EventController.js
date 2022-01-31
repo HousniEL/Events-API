@@ -9,10 +9,12 @@ class EventController extends Controller {
     super(service);
     this.getUserEvents = this.getUserEvents.bind(this);
     this.newGuest = this.newGuest.bind(this);
+    this.removeGuest = this.removeGuest.bind(this);
+    this.getEvent = this.getEvent.bind(this);
   }
 
-  async get(req, res) {
-    const response = await this.service.get(req.body);
+  async getEvent(req, res) {
+    const response = await this.service.getEvent(req.body);
     return res.status(response.statusCode).send(response);
   }
 
@@ -23,6 +25,10 @@ class EventController extends Controller {
 
   async newGuest(req, res) {
     const response = await this.service.newGuest(req.body);
+    return res.status(response.statusCode).send(response);
+  }
+  async removeGuest(req, res) {
+    const response = await this.service.removeGuest(req.body);
     return res.status(response.statusCode).send(response);
   }
 }
