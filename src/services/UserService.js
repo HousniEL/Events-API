@@ -13,11 +13,11 @@ class UserService extends Service {
     this.userTokenService = new UserTokenService(new UserToken().getInstance());
     this.get = this.get.bind(this);
     this.addFavoris = this.addFavoris.bind(this);
-    this.deleteFavoris = this.deleteFavoris.bind(this);
     this.addEvent = this.addEvent.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
     this.getSomeUserInfo = this.getSomeUserInfo.bind(this);
     this.checkFavorite = this.checkFavorite.bind(this);
+    this.checkParticipation = this.checkParticipation.bind(this);
   }
 
   async insertToken(id, token = null) {
@@ -131,6 +131,7 @@ class UserService extends Service {
   }
 
   async get(data) {
+    //recupere donnees user
     var response = await this.model.findOne({ _id: data.id }, { password: 0 });
     if (response) {
       return {
@@ -149,37 +150,17 @@ class UserService extends Service {
 
   async addFavoris(data) {
     try {
-      var response = await this.model.updateOne(
-        { _id: data.userId },
-        { $addToSet: { favoris: data.eventId } }
-      );
-      if (response) {
-        return {
-          error: false,
-          statusCode: 200,
-        };
+      if (!data.plus) {
+        var response = await this.model.updateOne(
+          { _id: data.userId },
+          { $pull: { favoris: data.eventId } }
+        );
       } else {
-        return {
-          error: true,
-          statusCode: 500,
-          message: "not found",
-        };
+        var response = await this.model.updateOne(
+          { _id: data.userId },
+          { $addToSet: { favoris: data.eventId } }
+        );
       }
-    } catch (e) {
-      return {
-        error: true,
-        statusCode: 500,
-        message: e.message,
-      };
-    }
-  }
-
-  async deleteFavoris(data) {
-    try {
-      var response = await this.model.updateOne(
-        { _id: data.userId },
-        { $pull: { favoris: data.eventId } }
-      );
       if (response) {
         return {
           error: false,
@@ -202,11 +183,13 @@ class UserService extends Service {
   }
 
   async addEvent(data) {
+    //addeventtouser
     try {
       var response = await this.model.updateOne(
         { _id: data.userId },
-        { $addToSet: { events: data.eventId } }
+        { $addToSet: { events: data.eventId } } //push l'event to user en evitant redandance(verifie si existe deja)
       );
+
       if (response) {
         return {
           error: false,
@@ -229,10 +212,11 @@ class UserService extends Service {
   }
 
   async deleteEvent(data) {
+    //delete event from user
     try {
       var response = await this.model.updateOne(
         { _id: data.userId },
-        { $pull: { event: data.eventId } }
+        { $pull: { events: data.eventId } }
       );
       if (response) {
         return {
@@ -253,6 +237,41 @@ class UserService extends Service {
         message: e.message,
       };
     }
+  }
+
+  async checkFavorite(data) {
+    //verifie si c favori déjà
+    var response = await this.model.findOne({
+      _id: data.userId,
+      favoris: { $elemMatch: { $eq: data.eventId } },
+    });
+    if (response) {
+      return {
+        error: false,
+        statusCode: 200,
+      };
+    }
+    return {
+      error: true,
+      statusCode: 500,
+    };
+  }
+  async checkParticipation(data) {
+    //verifie si c participé déjà
+    var response = await this.model.findOne({
+      _id: data.userId,
+      events: { $elemMatch: { $eq: data.eventId } },
+    });
+    if (response) {
+      return {
+        error: false,
+        statusCode: 200,
+      };
+    }
+    return {
+      error: true,
+      statusCode: 500,
+    };
   }
 
   async getSomeUserInfo(data) {

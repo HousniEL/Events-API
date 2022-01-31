@@ -12,10 +12,9 @@ router.put("/:id", UserController.update);
 router.delete("/:id", UserController.delete);
 router.post("/infos", UserController.get);
 router.post("/addFavoris", UserController.addFavoris);
-router.post("/deleteFavoris", UserController.deleteFavoris);
 router.post("/addEvent", UserController.addEvent);
 router.post("/deleteEvent", UserController.deleteEvent);
 router.post("/getSomeUserInfo", UserController.getSomeUserInfo);
 router.post("/checkFavorite", UserController.checkFavorite);
-
+router.post("/checkParticipation", UserController.checkParticipation);
 export default router;

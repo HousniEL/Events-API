@@ -12,11 +12,11 @@ class UserController extends Controller {
     this.openid = this.openid.bind(this);
     this.get = this.get.bind(this);
     this.addFavoris = this.addFavoris.bind(this);
-    this.deleteFavoris = this.deleteFavoris.bind(this);
     this.addEvent = this.addEvent.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
     this.getSomeUserInfo = this.getSomeUserInfo.bind(this);
     this.checkFavorite = this.checkFavorite.bind(this);
+    this.checkParticipation = this.checkParticipation.bind(this);
   }
 
   async signin(req, res) {
@@ -44,11 +44,6 @@ class UserController extends Controller {
     return res.status(response.statusCode).send(response);
   }
 
-  async deleteFavoris(req, res) {
-    const response = await this.service.deleteFavoris(req.body);
-    return res.status(response.statusCode).send(response);
-  }
-
   async addEvent(req, res) {
     const response = await this.service.addEvent(req.body);
     return res.status(response.statusCode).send(response);
@@ -66,6 +61,11 @@ class UserController extends Controller {
 
   async checkFavorite(req, res) {
     const response = await this.service.checkFavorite(req.body);
+    return res.status(response.statusCode).send(response);
+  }
+
+  async checkParticipation(req, res) {
+    const response = await this.service.checkParticipation(req.body);
     return res.status(response.statusCode).send(response);
   }
 }

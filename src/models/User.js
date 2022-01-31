@@ -45,6 +45,9 @@ class User{
             favoris: {
                 type: Array,
             },
+            events: {
+                type: Array,
+            },
         }, {
             writeConcern: {
                 w: "majority",
