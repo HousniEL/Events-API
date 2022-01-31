@@ -16,5 +16,6 @@ router.post("/deleteFavoris", UserController.deleteFavoris);
 router.post("/addEvent", UserController.addEvent);
 router.post("/deleteEvent", UserController.deleteEvent);
 router.post("/getSomeUserInfo", UserController.getSomeUserInfo);
+router.post("/checkFavorite", UserController.checkFavorite);
 
 export default router;

@@ -17,6 +17,7 @@ class UserService extends Service {
     this.addEvent = this.addEvent.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
     this.getSomeUserInfo = this.getSomeUserInfo.bind(this);
+    this.checkFavorite = this.checkFavorite.bind(this);
   }
 
   async insertToken(id, token = null) {
@@ -36,6 +37,7 @@ class UserService extends Service {
     }
     try {
       let item = await this.model.create(data);
+      delete item["password"];
       if (item) {
         var token = await this.insertToken(item._id, token);
         return {
@@ -58,7 +60,10 @@ class UserService extends Service {
   }
 
   async signin(data, token = null) {
-    var response = await this.model.findOne({ email: data.email }).exec();
+    var response = await this.model.findOne(
+      { email: data.email },
+      { password: 0 }
+    );
     if (response) {
       if (!response.account) {
         var token = await this.insertToken(response._id, token);
@@ -270,6 +275,23 @@ class UserService extends Service {
         message: "not found",
       };
     }
+  }
+
+  async checkFavorite(data) {
+    var response = await this.model.findOne({
+      _id: data.userId,
+      favoris: { $elemMatch: { $eq: data.eventId } },
+    });
+    if (response) {
+      return {
+        error: false,
+        statusCode: 200,
+      };
+    }
+    return {
+      error: true,
+      statusCode: 500,
+    };
   }
 }
 

@@ -16,6 +16,7 @@ class UserController extends Controller {
     this.addEvent = this.addEvent.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
     this.getSomeUserInfo = this.getSomeUserInfo.bind(this);
+    this.checkFavorite = this.checkFavorite.bind(this);
   }
 
   async signin(req, res) {
@@ -60,6 +61,11 @@ class UserController extends Controller {
 
   async getSomeUserInfo(req, res) {
     const response = await this.service.getSomeUserInfo(req.body);
+    return res.status(response.statusCode).send(response);
+  }
+
+  async checkFavorite(req, res) {
+    const response = await this.service.checkFavorite(req.body);
     return res.status(response.statusCode).send(response);
   }
 }
