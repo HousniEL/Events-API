@@ -5,8 +5,8 @@ import EventController from "../controllers/EventController.js";
 
 const route = express.Router();
 
-route.get("/", EventController.getAll);
 route.post("/", EventController.insert);
+route.post("/getEventsInfo", EventController.getEventsInfo);
 route.post("/upload", (req, res) => {
   var dir = "uploads/" + req.body.rep;
   if (!fs.existsSync(dir)) {
@@ -38,6 +38,8 @@ route.post("/infos", EventController.getEvent);
 route.post("/user", EventController.getUserEvents);
 route.post("/addGuest", EventController.newGuest);
 route.post("/removeGuest", EventController.removeGuest);
+route.post("/getEventPlanning", EventController.getEventPlanning);
+route.post("/getNbrOfPages", EventController.getNbrOfPages);
 
 route.post("/images", (req, res) => {
   readFile(
@@ -54,9 +56,11 @@ route.post("/images", (req, res) => {
   );
 });
 
-function readFile(rep, array, index, images, error, success) { //rep=dossier name, 
+function readFile(rep, array, index, images, error, success) {
+  //rep=dossier name,
   if (index < array.length) {
-    fs.readFile(`uploads/${rep}/${array[index]}.jpg`, "base64", (err, data) => {//Array tableau d'images, 
+    fs.readFile(`uploads/${rep}/${array[index]}.jpg`, "base64", (err, data) => {
+      //Array tableau d'images,
       //cette fct permet de passer les images au front en le convertissanr en binaire ,le front lit le fichier binaire automatiquement
       if (err) {
         return error({
@@ -65,7 +69,7 @@ function readFile(rep, array, index, images, error, success) { //rep=dossier nam
         });
       }
       images.push(data);
-      readFile(rep, array, index + 1 , images, error, success);//index+1 pour passer al'image prochaine
+      readFile(rep, array, index + 1, images, error, success); //index+1 pour passer al'image prochaine
     });
   } else {
     return success({ images });

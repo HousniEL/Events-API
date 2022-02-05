@@ -256,6 +256,7 @@ class UserService extends Service {
       statusCode: 500,
     };
   }
+
   async checkParticipation(data) {
     //verifie si c participé déjà
     var response = await this.model.findOne({
